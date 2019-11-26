@@ -1,7 +1,7 @@
 # torch imports
+import torch
 import torch.nn.functional as F
 import torch.nn as nn
-
 
 ## TODO: Complete this classifier
 class BinaryClassifier(nn.Module):
@@ -14,6 +14,7 @@ class BinaryClassifier(nn.Module):
     To train a binary classifier in PyTorch, use BCELoss.
     BCELoss is binary cross entropy loss, documentation: https://pytorch.org/docs/stable/nn.html#torch.nn.BCELoss
     """
+    
 
     ## TODO: Define the init function, the input params are required (for loading code in train.py to work)
     def __init__(self, input_features, hidden_dim, output_dim):
@@ -26,9 +27,20 @@ class BinaryClassifier(nn.Module):
         """
         super(BinaryClassifier, self).__init__()
 
-        # define any initial layers, here
-        
+        #         # define any initial layers, here
+        #         self.fc1 = nn.Linear(input_features, hidden_dim)
+        #         self.fc2 = nn.Linear(hidden_dim, output_dim)
+        #         self.drop = nn.Dropout(0.25)
+        #         # Sigmoid layer
+        #         self.sig = nn.Sigmoid()
 
+        # define any initial layers, here
+        self.fc1 = nn.Linear(input_features, hidden_dim)
+        self.fc2 = nn.Linear(hidden_dim, hidden_dim)
+        self.fc3 = nn.Linear(hidden_dim, output_dim)
+        self.drop = nn.Dropout(0.25)
+        # Sigmoid layer
+        self.sig = nn.Sigmoid()
     
     ## TODO: Define the feedforward behavior of the network
     def forward(self, x):
@@ -39,6 +51,12 @@ class BinaryClassifier(nn.Module):
         """
         
         # define the feedforward behavior
+        out = F.relu(self.fc1(x)) # relu activation on hidden layer
+        out = self.drop(out) # dropout
+        out = self.fc2(out)
+        out = self.drop(out) # dropout
+        out = self.fc3(out)
         
-        return x
+        #use sigmoid act
+        return self.sig(out) #return class score
     

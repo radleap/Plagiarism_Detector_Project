@@ -3,11 +3,12 @@ from __future__ import print_function
 import argparse
 import os
 import pandas as pd
+import numpy as np
 
 from sklearn.externals import joblib
 
 ## TODO: Import any additional libraries you need to define a model
-
+from sklearn.neural_network import MLPClassifier
 
 # Provided model load function
 def model_fn(model_dir):
@@ -40,6 +41,12 @@ if __name__ == '__main__':
     
     ## TODO: Add any additional arguments that you will need to pass into your model
     
+    # hyperparameters sent by the client are passed as command-line arguments to the script.
+    parser.add_argument('--test', type=str, default=os.environ.get('SM_CHANNEL_TEST'))
+    parser.add_argument('--epochs', type=int, default=5)
+    parser.add_argument('--batch-size', type=int, default=32)
+    parser.add_argument('--learning-rate', type=float, default=0.001)
+    
     # args holds all passed-in arguments
     args = parser.parse_args()
 
@@ -56,11 +63,10 @@ if __name__ == '__main__':
     
 
     ## TODO: Define a model 
-    model = None
-    
+    model = MLPClassifier(hidden_layer_sizes=(10,20), max_iter=100, alpha=0.0001, solver='sgd')
     
     ## TODO: Train the model
-    
+    model.fit(train_x, train_y)
     
     
     ## --- End of your code  --- ##
